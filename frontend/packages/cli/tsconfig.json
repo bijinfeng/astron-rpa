@@ -1,38 +1,25 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "exactOptionalPropertyTypes": false,
-    "target": "ES2022",
-    "lib": [
-      "DOM",
-      "ESNext"
-    ],
-    "allowJs": false,
-    "checkJs": false,
-    "module": "ES2022",
-    "strict": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "lib": ["DOM", "ESNext"],
     "jsx": "preserve",
-    "resolveJsonModule": true,
-    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
     "useDefineForClassFields": true,
-    "noPropertyAccessFromIndexSignature": false,
-    "allowUnusedLabels": false,
-    "allowUnreachableCode": false,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUncheckedIndexedAccess": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "rootDir": "src",
-    "declarationDir": "./dist-types",
-    "composite": true,
-    "isolatedDeclarations": true
+    "declaration": true,
+    "outDir": "dist",
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    "isolatedDeclarations": true,
+
+    /* modules */
+    "module": "ESNext",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
+
+    /* type checking */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
   "include": ["src"]
 }

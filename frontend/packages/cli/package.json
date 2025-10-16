@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.mjs",
-  "types": "./dist-types/index.d.ts",
+  "types": "./dist/index.d.mts",
   "bin": {
     "rpa": "./bin/rpa.js"
   },
   "scripts": {
-    "build": "rslib build",
+    "build": "tsdown",
     "typecheck": "tsc --noEmit",
-    "dev": "rslib build --watch"
+    "dev": "tsdown --watch"
   },
   "packageManager": "pnpm@10.17.1",
   "files": [
@@ -22,6 +22,6 @@
     "cac": "^6.7.14"
   },
   "dependencies": {
-    "@rslib/core": "^0.14.0"
+    "tsdown": "^0.15.7"
   }
 }
