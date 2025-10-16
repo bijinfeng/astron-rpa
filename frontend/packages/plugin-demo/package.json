@@ -1,0 +1,16 @@
+{
+  "name": "plugin-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "rpa": "rpa"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.1",
+  "devDependencies": {
+    "@rpa/cli": "workspace:*"
+  }
+}

@@ -1,9 +1,10 @@
 {
   "name": "@rpa/cli",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
-  "main": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
     "rpa": "./bin/rpa.js"
   },
@@ -15,13 +16,13 @@
   "packageManager": "pnpm@10.17.1",
   "files": [
     "bin",
-    "dist",
-    "dist-types"
+    "dist"
   ],
   "devDependencies": {
     "cac": "^6.7.14"
   },
   "dependencies": {
+    "debug": "^4.4.3",
     "tsdown": "^0.15.7"
   }
 }
