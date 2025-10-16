@@ -1,0 +1,27 @@
+{
+  "name": "@rpa/cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.mjs",
+  "types": "./dist-types/index.d.ts",
+  "bin": {
+    "rpa": "./bin/rpa.js"
+  },
+  "scripts": {
+    "build": "rslib build",
+    "typecheck": "tsc --noEmit",
+    "dev": "rslib build --watch"
+  },
+  "packageManager": "pnpm@10.17.1",
+  "files": [
+    "bin",
+    "dist",
+    "dist-types"
+  ],
+  "devDependencies": {
+    "cac": "^6.7.14"
+  },
+  "dependencies": {
+    "@rslib/core": "^0.14.0"
+  }
+}

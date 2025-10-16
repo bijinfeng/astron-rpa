@@ -153,6 +153,16 @@ importers:
         specifier: ^8.18.0
         version: 8.18.3
 
+  packages/cli:
+    dependencies:
+      '@rslib/core':
+        specifier: ^0.14.0
+        version: 0.14.0(typescript@5.9.2)
+    devDependencies:
+      cac:
+        specifier: ^6.7.14
+        version: 6.7.14
+
   packages/components:
     dependencies:
       '@ant-design/colors':
