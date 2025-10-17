@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "rpa": "rpa"
+    "dev": "rpa dev",
+    "build": "rpa build"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +13,8 @@
   "packageManager": "pnpm@10.17.1",
   "devDependencies": {
     "@rpa/cli": "workspace:*"
+  },
+  "dependencies": {
+    "@rpa/shared": "workspace:*"
   }
 }

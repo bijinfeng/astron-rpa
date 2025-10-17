@@ -5,6 +5,8 @@ import { version } from '../../package.json'
 import { globalLogger } from '../logger'
 import { resolveComma, toArray } from '../utils'
 
+import { createBuildServer } from './vite'
+
 const cli = cac('rpa')
 
 cli.help().version(version)
@@ -14,14 +16,14 @@ cli.option('--debug [feat]', 'Show debug logs')
 cli
   .command('dev', 'Start the development server')
   .action(async () => {
-    console.log(1111)
+    await createBuildServer({ dev: true })
   })
 
 cli
   .command('build', 'build the library for production')
   .option('-w, --watch', 'turn on watch mode, watch for changes and rebuild')
   .action(async () => {
-    console.log(2222)
+    await createBuildServer({ dev: false })
   })
 
 export async function runCli(): Promise<void> {

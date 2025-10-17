@@ -22,7 +22,12 @@
     "cac": "^6.7.14"
   },
   "dependencies": {
+    "@module-federation/vite": "^1.8.1",
+    "@rpa/shared": "workspace:*",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vitejs/plugin-vue-jsx": "^5.0.1",
     "debug": "^4.4.3",
-    "tsdown": "^0.15.7"
+    "tsdown": "^0.15.7",
+    "vite": "^7.1.10"
   }
 }
