@@ -1,14 +1,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import to from 'await-to-js'
 import type { IPluginConfig } from '@rpa/shared'
 
-import { extensionPath, extensionBaseUrl } from './path'
+import { extensionPath } from './path'
 
 interface MainManifest {
+  id: string
   name: string
-  version: string
-  description: string
-  main: string
+  metaData: {
+    buildInfo: { buildVersion: string }
+    publicPath: string
+  }
 }
 
 interface IExtension {
@@ -20,59 +23,65 @@ interface IExtension {
 export let extensions: IExtension[] = []
 
 /**
- * 遍历 extensionPath 下的 package，读取 package.json 中的内容
+ * 遍历 extensionPath 下的 package，读取 mf-manifest.json 中的内容
  */
-export function init() {
+export async function init() {
   const validExtensions: IExtension[] = []
 
-  extensionPath.forEach((basePath) => {
+  const promises = extensionPath.map(async (basePath) => {
     // 检查基础路径是否存在且为目录
-    if (!fs.existsSync(basePath) || !fs.statSync(basePath).isDirectory()) {
+    const [errStats, stats] = await to(fs.promises.stat(basePath))
+    if (errStats || !stats.isDirectory()) {
       return
     }
 
-    try {
-      const items = fs.readdirSync(basePath)
-
-      items.forEach((item) => {
-        const itemPath = path.join(basePath, item)
-
-        // 检查是否为目录
-        if (fs.statSync(itemPath).isDirectory()) {
-          const packageJsonPath = path.join(itemPath, 'package.json')
-
-          // 检查 package.json 是否存在
-          if (fs.existsSync(packageJsonPath) && fs.statSync(packageJsonPath).isFile()) {
-            try {
-              const content = fs.readFileSync(packageJsonPath, 'utf-8')
-              const manifest: MainManifest = JSON.parse(content)
-              const resourcePath = path.join(itemPath, 'dist')
-              const entryUrl = `${extensionBaseUrl}${manifest.name}/remoteEntry.js`
-
-              validExtensions.push({
-                name: manifest.name,
-                resourcePath,
-                config: {
-                  name: manifest.name,
-                  version: manifest.version,
-                  description: manifest.description,
-                  entry: entryUrl,
-                  enabled: true,
-                }
-              })
-            } catch (err) {
-              console.error(`Error parsing package.json in ${itemPath}:`, err)
-            }
-          } else {
-            // 这里可以处理“空的包”或者没有 package.json 的包
-            // 按照用户需求，目前主要是读取存在的 package.json
-          }
-        }
-      })
-    } catch (err) {
-      console.error(`Error reading extension directory ${basePath}:`, err)
+    const [errItems, items] = await to(fs.promises.readdir(basePath))
+    if (errItems) {
+      console.error(`Error reading extension directory ${basePath}:`, errItems)
+      return
     }
+
+    const itemPromises = items.map(async (item) => {
+      const itemPath = path.join(basePath, item)
+
+      // 检查是否为目录
+      const [errItemStats, itemStats] = await to(fs.promises.stat(itemPath))
+      if (errItemStats || !itemStats.isDirectory()) return
+
+      const manifestJsonPath = path.join(itemPath, 'mf-manifest.json')
+
+      // 检查 mf-manifest.json 是否存在
+      const [errManifestStats, manifestStats] = await to(fs.promises.stat(manifestJsonPath))
+      if (errManifestStats || !manifestStats.isFile()) return
+
+      const [errContent, content] = await to(fs.promises.readFile(manifestJsonPath, 'utf-8'))
+      if (errContent) return
+
+      try {
+        const manifest: MainManifest = JSON.parse(content)
+        const resourcePath = itemPath
+        const entryUrl = path.join(manifest.metaData.publicPath, 'mf-manifest.json')
+
+        validExtensions.push({
+          name: manifest.name,
+          resourcePath,
+          config: {
+            name: manifest.name,
+            version: manifest.metaData.buildInfo.buildVersion,
+            entry: entryUrl,
+            enabled: true,
+          }
+        })
+      } catch (err) {
+        // JSON 解析失败
+        console.error(`Error parsing manifest at ${manifestJsonPath}:`, err)
+      }
+    })
+
+    await Promise.all(itemPromises)
   })
+
+  await Promise.all(promises)
 
   extensions = validExtensions
 }
