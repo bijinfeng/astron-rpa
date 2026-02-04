@@ -26,8 +26,9 @@ export async function createBuildServer(options: { dev?: boolean }): Promise<voi
   const config: InlineConfig = {
     plugins: [
       federation({
-        filename: 'remoteEntry.js',
+        // filename: 'remoteEntry.js',
         name: 'remote',
+        manifest: true,
         exposes: {
           './index': './src/index.ts',
         },

@@ -240,10 +240,10 @@ export class PluginManager extends EventEmitter<IPluginManagerEvents> {
 
     try {
       // 设置远程配置
-
       this.mf.registerRemotes([{
         name: instance.config.name,
         entry: instance.config.entry,
+        type: 'module',
       }])
 
       // 获取远程模块

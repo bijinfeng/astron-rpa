@@ -1,6 +1,6 @@
 import type { IPluginSettings, IPluginSubscription, ISettingsTabContribution } from '@rpa/shared'
 
-import { SimpleRegistry } from './registry'
+import { SimpleRegistry } from './_registry'
 
 /**
  * 设置页面Tab扩展点 - 直接使用基础类，无需复写
