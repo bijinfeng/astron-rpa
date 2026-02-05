@@ -100,7 +100,6 @@ function registerRpaProtocol() {
         const extensionName = paths[1]
         const resourcePath = getExtensionResourcePath(extensionName)
         const filePath = path.join(resourcePath, ...paths.slice(2))
-        console.log(filePath)
         callback({ path: filePath })
       } else {
         const filePath = path.join(rendererPath, u.pathname)

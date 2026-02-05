@@ -45,7 +45,7 @@ export async function createBuildServer(options: { dev?: boolean }): Promise<voi
         ...userConfig,
         name: remoteName,
         manifest: true,
-        publicPath: `rpa://extensions/${remoteName}/`,
+        publicPath: options.dev ? undefined : `rpa://extensions/${remoteName}/`,
         exposes: {
           './index': './src/index.ts',
         },

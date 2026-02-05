@@ -1,5 +1,5 @@
 {
-  "name": "plugin-demo",
+  "name": "<%= name %>",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,10 +7,6 @@
     "dev": "rpa dev",
     "build": "rpa build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.17.1",
   "devDependencies": {
     "@rpa/cli": "workspace:*"
   },
