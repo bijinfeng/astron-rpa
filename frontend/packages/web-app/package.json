@@ -18,7 +18,7 @@
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
     "@microsoft/fetch-event-source": "^2.0.1",
-    "@module-federation/enhanced": "^0.24.0",
+    "@module-federation/enhanced": "^2.0.0",
     "@rpa/components": "workspace:*",
     "@rpa/locales": "workspace:*",
     "@rpa/shared": "workspace:*",
