@@ -60,7 +60,7 @@ export async function init() {
       try {
         const manifest: MainManifest = JSON.parse(content)
         const resourcePath = itemPath
-        const entryUrl = path.join(manifest.metaData.publicPath, 'mf-manifest.json')
+        const entryUrl = manifest.metaData.publicPath + 'mf-manifest.json'
 
         validExtensions.push({
           name: manifest.name,

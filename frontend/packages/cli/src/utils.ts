@@ -51,7 +51,7 @@ export async function renderTemplate(src: string, dest: string, data: Record<str
     // Here we use simple replacement for filenames to avoid complexity with filesystem paths.
     let destName = name
     for (const [key, value] of Object.entries(data)) {
-      destName = destName.replace(`{{${key}}}`, value)
+      destName = destName.replaceAll(`{{${key}}}`, value)
     }
 
     const srcPath = path.join(src, name)

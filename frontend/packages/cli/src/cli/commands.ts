@@ -39,7 +39,6 @@ cli
       const templateDir = getBuiltinTemplateDir()
       if (!templateDir) {
         cancel('builtin plugin template not found')
-        process.exit(1)
         return
       }
       
@@ -52,7 +51,6 @@ cli
         })
         if (isCancel(result)) {
           cancel('Operation cancelled')
-          process.exit(0)
           return
         }
         name = result as string
@@ -67,7 +65,6 @@ cli
         })
         if (isCancel(result)) {
           cancel('Operation cancelled')
-          process.exit(0)
           return
         }
         targetDir = result as string
@@ -77,7 +74,6 @@ cli
       
       if (exists(normalizedTarget)) {
         cancel('target directory already exists')
-        process.exit(1)
         return
       }
 
@@ -90,7 +86,6 @@ cli
     }
     catch (error) {
       globalLogger.error(error)
-      process.exit(1)
     }
   })
 

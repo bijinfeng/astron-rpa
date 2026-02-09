@@ -93,7 +93,7 @@ export class PluginManager extends EventEmitter<IPluginManagerEvents> {
       remotes: [],
       shared: {
         vue: {
-          version: '3.5.22',
+          version: __VUE_VERSION__,
           scope: 'default',
           lib: () => Vue,
           shareConfig: {
@@ -102,7 +102,7 @@ export class PluginManager extends EventEmitter<IPluginManagerEvents> {
           },
         },
         pinia: {
-          version: '3.0.3',
+          version: __PINIA_VERSION__,
           scope: 'default',
           lib: () => Pinia,
           shareConfig: {
