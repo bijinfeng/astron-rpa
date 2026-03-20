@@ -79,7 +79,16 @@ locales/
 ```
 ---
 
-## 5. Best Practices
+## 5. Terminology
+
+See [terminology.md](references/terminology.md).
+
+- Keep UI naming consistent (应用/Application, 控制台/Console)
+- Do not translate product names and code identifiers
+
+---
+
+## 6. Best Practices
 
 See [best-practices.md](references/best-practices.md).
 
@@ -89,12 +98,13 @@ See [best-practices.md](references/best-practices.md).
 
 ---
 
-## 6. Checklist
+## 7. Checklist
 
 - [ ] No hardcoded user-facing strings
 - [ ] Locale files exist for all supported languages
 - [ ] Fallback language is configured
 - [ ] i18n checker script passes
+- [ ] Terminology follows the project glossary
 
 ---
 
