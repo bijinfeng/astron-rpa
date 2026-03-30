@@ -7,6 +7,7 @@ const [useProvideFormStore, useFormStore] = createInjectionState(() => {
   const { canvasManager } = useProcessStore()
 
   const nodeParameter = computed(() => canvasManager.activeTab?.nodeParameter)
+  const atom = computed(() => nodeParameter.value?.activeAtom)
   const atomTab = computed<RPA.Process.AtomTabs[]>(() => nodeParameter.value?.formTabs.value ?? [])
 
   const formattedTabs = computed(() => {
@@ -24,7 +25,7 @@ const [useProvideFormStore, useFormStore] = createInjectionState(() => {
     }, {} as Record<string, any>)
   })
 
-  return { nodeParameter, atomTab, formattedTabs, formValues }
+  return { atom, nodeParameter, atomTab, formattedTabs, formValues }
 })
 
 export { useProvideFormStore, useFormStore }
