@@ -20,11 +20,12 @@ import { taskCancel, taskNotify } from '@/api/task'
 import GlobalModal from '@/components/GlobalModal/index.ts'
 import { WINDOW_NAME } from '@/constants'
 import { EDITORPAGE, SMARTCOMPONENT } from '@/constants/menu'
-import { utilsManager, windowManager, type CreateWindowOptions, type WindowPosition } from '@/platform'
+import { utilsManager, windowManager } from '@/platform'
+import type { CreateWindowOptions, WindowPosition } from '@/platform'
+import { useAppConfigStore } from '@/stores/useAppConfig'
 import { usePermissionStore } from '@/stores/usePermissionStore'
 import { useRunningStore } from '@/stores/useRunningStore'
 import useUserSettingStore from '@/stores/useUserSetting.ts'
-import { useAppConfigStore } from '@/stores/useAppConfig'
 
 export interface W2WType {
   from: string // 来源窗口
@@ -141,11 +142,13 @@ utilsManager.listenEvent('w2w', (eventMsg: W2WType) => {
     else if (type === 'save') {
       BUS.$emit('record-save', data)
     }
-  } else if (from === WINDOW_NAME.USERFORM) {
+  }
+  else if (from === WINDOW_NAME.USERFORM) {
     if (type === 'userFormSave') {
       runningStore.sendReplyMessage(data)
     }
-  } else if (from === WINDOW_NAME.MULTICHAT) {
+  }
+  else if (from === WINDOW_NAME.MULTICHAT) {
     if (type === 'chatContentSave') {
       runningStore.sendReplyMessage(data)
     }

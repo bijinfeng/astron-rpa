@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import ChainOfThought from './ChainOfThought.vue'
+
 const emit = defineEmits(['close'])
 
 function handleClose() {
@@ -7,7 +9,7 @@ function handleClose() {
 </script>
 
 <template>
-  <div class="w-[840px] h-[640px] bg-white rounded-3xl p-6 border-border">
+  <div class="cua-expanded-container w-[840px] h-[640px] bg-white rounded-3xl p-6 border-border">
     <div class="flex items-center h-8 mb-6">
       <div class="text-base font-semibold truncate flex-1">
         Agent操作中
@@ -18,8 +20,14 @@ function handleClose() {
       </div>
     </div>
 
-    <div class="rounded-xl px-4 border-border border-[1px]">
-      xx
+    <div class="rounded-xl p-4 border-border border-[1px]">
+      <ChainOfThought />
     </div>
   </div>
 </template>
+
+<style scoped>
+.cua-expanded-container {
+  box-shadow: 0 12px 16px -4px rgba(10, 13, 18, 0.08), 0 4px 6px -2px rgba(10, 13, 18, 0.03);
+}
+</style>
