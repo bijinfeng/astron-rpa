@@ -18,18 +18,18 @@ const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const [isEdit, toggleEdit] = useToggle(false);
 
 const formattedTabs = computed(() => {
-  return [
-    ...atomTab.value.map((item, index) => ({
-      title: item.name,
-      value: index,
-      render: () => h(AtomFormRender, { atomFormMeta: item })
-    })),
-    {
-      title: '调试结果',
-      value: 'test',
-      render: () => h(AtomTestRender)
-    }
-  ]
+  const formTabs = atomTab.value.map((item, index) => ({
+    title: item.name,
+    value: index,
+    render: () => h(AtomFormRender, { atomFormMeta: item })
+  }))
+  const testTab = {
+    title: '调试结果',
+    value: 'test',
+    render: () => h(AtomTestRender)
+  }
+
+  return atom.value.debugButton ? [...formTabs, testTab] : formTabs
 })
 
 const atomName = computed(() => atom.value?.alias || atom.value?.title);
@@ -63,7 +63,7 @@ const handleAliasEdit = () => {
           v-if="isEdit"
           ref="inputRef"
           :default-value="atomName"
-          class="max-w-[300px]"
+          class="max-w-[300px] w-auto"
           size="small"
           @press-enter="toggleEdit(false)"
           @blur="handleAliasChange"
@@ -80,16 +80,13 @@ const handleAliasEdit = () => {
           @click="!isEdit && handleAliasEdit()"
         />
 
-        <div class="flex-1" />
-
         <rpa-hint-icon
           :name="props.collapsed ? 'maximize' : 'minimize'"
           :title="props.collapsed ? '切换到宽版' : '切换到窄版'"
-          class="text-base mx-1"
+          class="text-base mx-1 ml-auto"
           enable-hover-bg
           @click="() => emit('toggleCollapsed')"
         />
-
         <rpa-hint-icon
           name="close-1"
           class="text-base mx-1"
