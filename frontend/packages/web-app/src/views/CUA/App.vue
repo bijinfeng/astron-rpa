@@ -19,7 +19,7 @@ const [isExpanded, toggleExpanded] = useToggle(false)
       </div>
 
       <!-- 交互层 - 可点击 -->
-      <div class="panel-layer">
+      <div class="panel-layer" :class="isExpanded ? 'items-center justify-center' : 'items-end justify-end p-6'">
         <ExpandedPanel v-if="isExpanded" @close="toggleExpanded(false)" />
         <CollapsedPanel v-else @expand="toggleExpanded(true)" />
       </div>
@@ -50,8 +50,6 @@ const [isExpanded, toggleExpanded] = useToggle(false)
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
   pointer-events: none;
   z-index: 1;
 }

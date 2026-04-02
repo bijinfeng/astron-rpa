@@ -1,23 +1,39 @@
 <script setup lang="ts">
-import { useTranslation } from "i18next-vue";
-import { ref, computed, useTemplateRef, nextTick } from "vue";
+import { ref, computed, h, useTemplateRef, nextTick } from "vue";
 import { useToggle } from "@vueuse/core";
 
-import AtomFormItem from "./AtomFormItem.vue";
+import AtonNotice from "./AtonNotice.vue";
+import AtomFormRender from "./AtomFormRender.vue";
+import AtomTestRender from "./AtomTestRender.vue";
 import { useProvideFormStore } from "./hooks/useFormStore";
 
 const props = defineProps<{ collapsed?: boolean, headerClass?: string, bodyClass?: string }>();
 
 const emit = defineEmits(["close", "toggleCollapsed"]);
 
-const { i18next } = useTranslation();
-const { atom, atomTab, formattedTabs, nodeParameter } = useProvideFormStore();
+const { atom, atomTab, nodeParameter } = useProvideFormStore();
 
 const activeKey = ref<number>(0);
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const [isEdit, toggleEdit] = useToggle(false);
 
+const formattedTabs = computed(() => {
+  return [
+    ...atomTab.value.map((item, index) => ({
+      title: item.name,
+      value: index,
+      render: () => h(AtomFormRender, { nodeParameter: nodeParameter.value, atomFormMeta: item })
+    })),
+    {
+      title: '调试结果',
+      value: 'test',
+      render: () => h(AtomTestRender)
+    }
+  ]
+})
+
 const atomName = computed(() => atom.value?.alias || atom.value?.title);
+const activeTab = computed(() => formattedTabs.value.find(item => item.value === activeKey.value))
 
 const handleAliasChange = (e: FocusEvent) => {
   const alias = (e.target as HTMLInputElement).value?.trim()
@@ -34,7 +50,7 @@ const handleAliasEdit = () => {
 </script>
 
 <template>
-  <div class="relative atom-config-container h-full flex flex-col">
+  <div class="relative atom-config-container flex flex-col">
     <div :class="props.headerClass">
       <div class="h-8 mb-2 flex gap-2 items-center">
         <div
@@ -84,6 +100,8 @@ const handleAliasEdit = () => {
 
       <div class="text-text-secondary mb-3 truncate">{{ atom.comment }}</div>
 
+      <AtonNotice class="mb-6" />
+
       <a-segmented
         v-model:value="activeKey"
         block
@@ -96,27 +114,12 @@ const handleAliasEdit = () => {
       </a-segmented>
     </div>
 
-    <div class="flex-1 overflow-y-auto" :class="props.bodyClass">
-      <article
-        v-for="item in atomTab[activeKey]?.params"
-        :key="item.key"
-        class="tab-container text-[#333] dark:text-[rgba(255,255,255,0.45)]"
-      >
-        <div
-          v-if="item.name"
-          class="text-sm leading-6 mb-3 flex gap-1 items-center"
-        >
-          <span class="w-1 h-3 rounded-[1px] bg-primary" />
-          {{ item.name[i18next.language] }}
-        </div>
-        <template v-for="it in item.formItems" :key="it.key">
-          <AtomFormItem
-            v-if="it.show !== false"
-            :atom-form-item="it"
-            @update="nodeParameter?.updateValue"
-          />
-        </template>
-      </article>
+    <div class="flex-1 min-h-0 overflow-y-auto" :class="props.bodyClass">
+      <component :is="activeTab?.render()" />
+    </div>
+
+    <div class="px-6 py-3" v-if="$slots.footer">
+      <slot name="footer" />
     </div>
   </div>
 </template>

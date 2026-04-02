@@ -6,6 +6,7 @@ import { Modal } from 'ant-design-vue'
 import { useProcessStore } from '@/stores/useProcessStore'
 
 import AtomBaseForm from '../AtomBaseForm.vue'
+import AtomFooter from '../AtomFooter.vue'
 import { RIGHT_TAB_KEY } from '../../../config'
 
 const modal = NiceModal.useModal()
@@ -21,6 +22,10 @@ const handleToggleCollapsed = () => {
   modal.hide()
   rightTabActiveKey.value = RIGHT_TAB_KEY.NODE
 }
+
+const handleOk = () => {
+  modal.hide()
+}
 </script>
 
 <template>
@@ -32,13 +37,21 @@ const handleToggleCollapsed = () => {
     centered
   >
     <AtomBaseForm
-      class="mw-[1080px] w-[75vw] min-h-[60vh] max-h-[80vh]"
+      class="mw-[1080px] w-[70vw] min-h-[60vh] max-h-[80vh]"
       headerClass="px-6 pt-5"
       bodyClass="px-6"
       @close="handleClose"
       :collapsed="false"
       @toggleCollapsed="handleToggleCollapsed"
     />
+
+    <template #footer>
+      <div class="flex items-center">
+        <AtomFooter class="flex-1" />
+        <a-button key="back" @click="handleClose">{{ $t('cancel') }}</a-button>
+        <a-button key="submit" type="primary" @click="handleOk">{{ $t('confirm') }}</a-button>
+      </div>
+    </template>
   </Modal>
 </template>
 

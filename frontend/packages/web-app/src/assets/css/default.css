@@ -47,10 +47,6 @@ a {
   color: var(--color-primary);
 }
 
-.padT60 {
-  padding-top: 60px;
-}
-
 h1,
 h2,
 h3,
@@ -188,8 +184,5 @@ h6 {
 @layer base {
   * {
     @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }

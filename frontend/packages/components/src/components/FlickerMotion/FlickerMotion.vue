@@ -10,10 +10,6 @@ interface Props {
   squareSize?: number
   /** 方块间距（px） */
   gap?: number
-  /** 容器内边距（px） */
-  padding?: number
-  /** 容器圆角（px） */
-  borderRadius?: number
   /** 最小透明度 */
   minAlpha?: number
 }
@@ -23,8 +19,6 @@ const props = withDefaults(defineProps<Props>(), {
   color: '#726fff',
   squareSize: 4,
   gap: 2,
-  padding: 20,
-  borderRadius: 30,
   minAlpha: 0.15,
 })
 
@@ -66,13 +60,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
-    class="matrix-container"
-    :style="{
-      padding: `${padding}px`,
-      borderRadius: `${borderRadius}px`,
-    }"
-  >
+  <div class="matrix-container">
     <div
       class="matrix-grid"
       :style="{

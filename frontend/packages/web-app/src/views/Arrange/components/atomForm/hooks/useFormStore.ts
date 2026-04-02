@@ -10,13 +10,6 @@ const [useProvideFormStore, useFormStore] = createInjectionState(() => {
   const atom = computed(() => nodeParameter.value?.activeAtom)
   const atomTab = computed<RPA.Process.AtomTabs[]>(() => nodeParameter.value?.formTabs.value ?? [])
 
-  const formattedTabs = computed(() => {
-    return atomTab.value.map((item, index) => ({
-      title: item.name,
-      value: index,
-    }))
-  })
-
   const formValues = computed(() => {
     const formItems = atomTab.value.flatMap(item => item.params).flatMap(i => i.formItems)
     return formItems.reduce((acc, curr) => {
@@ -25,7 +18,7 @@ const [useProvideFormStore, useFormStore] = createInjectionState(() => {
     }, {} as Record<string, any>)
   })
 
-  return { atom, nodeParameter, atomTab, formattedTabs, formValues }
+  return { atom, nodeParameter, atomTab, formValues }
 })
 
 export { useProvideFormStore, useFormStore }

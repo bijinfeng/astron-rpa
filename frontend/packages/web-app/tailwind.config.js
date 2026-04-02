@@ -1,4 +1,5 @@
 import tailwindPreset from '@rpa/shared/tokens/tailwind'
+import { ColorPrimary } from '@rpa/shared/tokens/variables.js'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -32,7 +33,7 @@ export default {
   				foreground: 'hsl(var(--popover-foreground))'
   			},
   			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
+  				DEFAULT: ColorPrimary,
   				foreground: 'hsl(var(--primary-foreground))'
   			},
   			secondary: {
