@@ -31,7 +31,7 @@ const handleClose = () => {
     @close="handleClose"
   >
     <template #footer>
-      <AtomFooter />
+      <AtomFooter class="px-6 py-3" />
     </template>
   </AtomBaseForm>
 </template>

@@ -2,7 +2,7 @@
 import { ref, computed, h, useTemplateRef, nextTick } from "vue";
 import { useToggle } from "@vueuse/core";
 
-import AtonNotice from "./AtonNotice.vue";
+import AtomNotice from "./AtomNotice.vue";
 import AtomFormRender from "./AtomFormRender.vue";
 import AtomTestRender from "./AtomTestRender.vue";
 import { useProvideFormStore } from "./hooks/useFormStore";
@@ -22,7 +22,7 @@ const formattedTabs = computed(() => {
     ...atomTab.value.map((item, index) => ({
       title: item.name,
       value: index,
-      render: () => h(AtomFormRender, { nodeParameter: nodeParameter.value, atomFormMeta: item })
+      render: () => h(AtomFormRender, { atomFormMeta: item })
     })),
     {
       title: '调试结果',
@@ -100,7 +100,7 @@ const handleAliasEdit = () => {
 
       <div class="text-text-secondary mb-3 truncate">{{ atom.comment }}</div>
 
-      <AtonNotice class="mb-6" />
+      <AtomNotice class="mb-6" />
 
       <a-segmented
         v-model:value="activeKey"
@@ -118,9 +118,7 @@ const handleAliasEdit = () => {
       <component :is="activeTab?.render()" />
     </div>
 
-    <div class="px-6 py-3" v-if="$slots.footer">
-      <slot name="footer" />
-    </div>
+    <slot name="footer" />
   </div>
 </template>
 

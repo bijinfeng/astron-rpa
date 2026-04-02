@@ -3,6 +3,10 @@ import { baseUrl } from '@/utils/env'
 import { WINDOW_NAME } from '@/constants'
 import { windowManager, type CreateWindowOptions } from '@/platform'
 
+import { useFormStore } from "./hooks/useFormStore";
+
+const { atom } = useFormStore();
+
 const handleRunDebug = async () => {
   const options: CreateWindowOptions = {
     url: `${baseUrl}/${WINDOW_NAME.CUA}.html`,
@@ -23,8 +27,8 @@ const handleRunDebug = async () => {
 </script>
 
 <template>
-  <div class="flex">
-    <a-button @click="handleRunDebug">
+  <div class="flex" v-if="atom.debugButton">
+    <a-button @click="handleRunDebug" v-if="atom.debugButton === 'ai_debug'">
       运行调试
     </a-button>
   </div>

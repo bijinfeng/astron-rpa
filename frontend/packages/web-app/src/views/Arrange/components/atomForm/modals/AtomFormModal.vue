@@ -32,6 +32,7 @@ const handleOk = () => {
   <Modal
     v-bind="NiceModal.antdModal(modal)"
     :closable="false"
+    :footer="null"
     class="atom-form-modal"
     width="auto"
     centered
@@ -43,15 +44,17 @@ const handleOk = () => {
       @close="handleClose"
       :collapsed="false"
       @toggleCollapsed="handleToggleCollapsed"
-    />
-
-    <template #footer>
-      <div class="flex items-center">
-        <AtomFooter class="flex-1" />
-        <a-button key="back" @click="handleClose">{{ $t('cancel') }}</a-button>
-        <a-button key="submit" type="primary" @click="handleOk">{{ $t('confirm') }}</a-button>
-      </div>
-    </template>
+    >
+      <template #footer>
+        <div class="flex items-center p-6">
+          <AtomFooter />
+          <div class="ml-auto space-x-2">
+            <a-button key="back" @click="handleClose">{{ $t('cancel') }}</a-button>
+            <a-button key="submit" type="primary" @click="handleOk">{{ $t('confirm') }}</a-button>
+          </div>
+        </div>
+      </template>
+    </AtomBaseForm>
   </Modal>
 </template>
 
