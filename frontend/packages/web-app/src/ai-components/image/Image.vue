@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue'
 import { cn } from '@/ai-components/lib/utils'
 import { computed } from 'vue'
 
-interface Props extends Experimental_GeneratedImage {
+interface Props extends Omit<Experimental_GeneratedImage, 'uint8Array'> {
   class?: HTMLAttributes['class']
 }
 
