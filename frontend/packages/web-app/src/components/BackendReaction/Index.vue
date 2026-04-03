@@ -152,6 +152,10 @@ utilsManager.listenEvent('w2w', (eventMsg: W2WType) => {
     if (type === 'chatContentSave') {
       runningStore.sendReplyMessage(data)
     }
+  } else if (from === WINDOW_NAME.CUA) {
+    if (type === 'complete') {
+      BUS.$emit('cua-test-complete', data)
+    }
   }
 })
 

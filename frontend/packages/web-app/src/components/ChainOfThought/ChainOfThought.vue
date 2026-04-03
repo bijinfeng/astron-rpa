@@ -10,6 +10,8 @@ import {
 } from '@/ai-components/chain-of-thought'
 import { Image } from '@/ai-components/image'
 import { DotIcon, ImageIcon, SearchIcon } from 'lucide-vue-next'
+import { isEmpty } from 'lodash-es'
+
 import type { Step } from './utils'
 import { getHostname, getLogoSrc } from './utils'
 
@@ -24,8 +26,10 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div class="h-[460px] border-border border-[1px] p-4 rounded-xl">
-    <ChainOfThought default-open>
+  <div class="border-border border-[1px] p-4 rounded-xl">
+    <slot v-if="$slots.empty && isEmpty(props.steps)" name="empty" />
+
+    <ChainOfThought v-else default-open>
       <ChainOfThoughtHeader>
         {{ props.isStreaming ? '操作屏幕中' : '已完成' }}
       </ChainOfThoughtHeader>

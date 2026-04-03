@@ -2,27 +2,36 @@
 import { BorderMotion } from "@rpa/components";
 import { useToggle } from "@vueuse/core";
 import { onMounted, onUnmounted, ref } from "vue";
-import { useRoute } from 'vue-router'
 
 import { cuaChatStream } from "@/api/common";
 import ConfigProvider from "@/components/ConfigProvider/index.vue";
 import ChainOfThought from "@/components/ChainOfThought/ChainOfThought.vue";
 import type { StreamContext, Step } from "@/components/ChainOfThought/utils";
 import { createStep, processSseMessage } from "@/components/ChainOfThought/utils";
+import { windowManager } from '@/platform'
+import { WINDOW_NAME } from '@/constants'
 
 import Header from "./Header.vue";
 
-const route = useRoute()
 const [isExpanded, toggleExpanded] = useToggle(false);
 
 const steps = ref<Step[]>([]);
 const isStreaming = ref(false);
 let abortController: AbortController | null = null;
 
-function markAllComplete() {
+async function markAllComplete() {
   steps.value.forEach((s) => {
     if (s.status !== "complete") s.status = "complete";
   });
+
+  await windowManager.emitTo({
+    from: WINDOW_NAME.CUA,
+    target: WINDOW_NAME.MAIN,
+    type: 'complete',
+    data: JSON.stringify(steps.value),
+  })
+  windowManager.showWindow(WINDOW_NAME.MAIN)
+  windowManager.closeWindow()
 }
 
 function startRequest(userMessage: string) {
@@ -74,8 +83,11 @@ function handlePause() {
 }
 
 onMounted(() => {
-  const userMessage = route.query.message as string;
-  userMessage && startRequest(userMessage);
+  // 初始化信息
+  const targetInfo = new URL(location.href).searchParams
+  // 文件路径
+  const message = targetInfo.get('message') || ''
+  message && startRequest(message);
 });
 
 onUnmounted(() => {
@@ -116,7 +128,7 @@ onUnmounted(() => {
             v-if="isExpanded"
             :steps="steps"
             :is-streaming="isStreaming"
-            class="mt-6"
+            class="mt-6 h-[460px]"
           />
         </div>
       </div>

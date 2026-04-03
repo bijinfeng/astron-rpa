@@ -7,9 +7,11 @@ import { useFormStore } from "./hooks/useFormStore";
 
 const { atom } = useFormStore();
 
-const handleRunDebug = async () => {
+const handleAIDebug = async () => {
+  // 从输入参数中挑出 key 为 instruction 的参数
+  const instruction = atom.value.inputList.find((item) => item.key === 'instruction')?.value[0]?.value || ''
   const options: CreateWindowOptions = {
-    url: `${baseUrl}/${WINDOW_NAME.CUA}.html`,
+    url: `${baseUrl}/${WINDOW_NAME.CUA}.html?message=${instruction}`,
     title: WINDOW_NAME.CUA,
     label: WINDOW_NAME.CUA,
     alwaysOnTop: true,
@@ -28,7 +30,7 @@ const handleRunDebug = async () => {
 
 <template>
   <div class="flex" v-if="atom.debugButton">
-    <a-button @click="handleRunDebug" v-if="atom.debugButton === 'ai_debug'">
+    <a-button @click="handleAIDebug" v-if="atom.debugButton === 'ai_debug'">
       运行调试
     </a-button>
   </div>
