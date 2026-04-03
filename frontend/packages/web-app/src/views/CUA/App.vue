@@ -1,97 +1,86 @@
 <script lang="ts" setup>
-import { BorderMotion } from '@rpa/components'
-import { useToggle } from '@vueuse/core'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { BorderMotion } from "@rpa/components";
+import { useToggle } from "@vueuse/core";
+import { onMounted, onUnmounted, ref } from "vue";
+import { useRoute } from 'vue-router'
 
-import ConfigProvider from '@/components/ConfigProvider/index.vue'
+import { cuaChatStream } from "@/api/common";
+import ConfigProvider from "@/components/ConfigProvider/index.vue";
+import ChainOfThought from "@/components/ChainOfThought/ChainOfThought.vue";
+import type { StreamContext, Step } from "@/components/ChainOfThought/utils";
+import { createStep, processSseMessage } from "@/components/ChainOfThought/utils";
 
-import Header from './Header.vue'
-import ChainOfThought from './ChainOfThought.vue'
-import type { PartialToolCall, Step } from './utils'
-import { createStep, processStreamResponse } from './utils'
+import Header from "./Header.vue";
 
-const [isExpanded, toggleExpanded] = useToggle(false)
+const route = useRoute()
+const [isExpanded, toggleExpanded] = useToggle(false);
 
-const steps = ref<Step[]>([])
-const isStreaming = ref(false)
-let abortController: AbortController | null = null
+const steps = ref<Step[]>([]);
+const isStreaming = ref(false);
+let abortController: AbortController | null = null;
 
 function markAllComplete() {
   steps.value.forEach((s) => {
-    if (s.status !== 'complete')
-      s.status = 'complete'
-  })
+    if (s.status !== "complete") s.status = "complete";
+  });
 }
 
-async function startRequest(userMessage: string) {
-  if (isStreaming.value)
-    return
-  isStreaming.value = true
-  steps.value = []
+function startRequest(userMessage: string) {
+  if (isStreaming.value) return;
+  isStreaming.value = true;
+  steps.value = [];
 
-  abortController = new AbortController()
+  abortController = new AbortController();
 
-  const partialToolCalls: Record<number, PartialToolCall> = {}
-  let currentTextStepId: string | null = null
+  const context: StreamContext = {
+    steps: steps.value,
+    partialToolCalls: {},
+    currentTextStepId: null,
+  };
 
-  try {
-    const response = await fetch(
-      'http://localhost:13159/api/rpa-ai-service/cua/chat/stream',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [{ role: 'user', content: [{ type: 'text', text: userMessage }] }],
-        }),
-        signal: abortController.signal,
-      },
-    )
-
-    if (!response.ok || !response.body) {
-      const errorStep = createStep('text', `请求失败: ${response.status} ${response.statusText}`)
-      errorStep.status = 'complete'
-      steps.value.push(errorStep)
-      return
-    }
-
-    await processStreamResponse(
-      response.body.getReader(),
-      { steps: steps.value, partialToolCalls, currentTextStepId },
-      {
-        onUpdateCurrentTextStepId: id => (currentTextStepId = id),
-        onMarkAllComplete: markAllComplete,
-      },
-    )
-
-    markAllComplete()
-  }
-  catch (err: any) {
-    if (err?.name !== 'AbortError') {
-      const errorStep = createStep('text', `流式响应出错: ${err?.message ?? String(err)}`)
-      errorStep.status = 'complete'
-      steps.value.push(errorStep)
-    }
-  }
-  finally {
-    isStreaming.value = false
-  }
+  cuaChatStream(
+    userMessage,
+    (data) => {
+      if (processSseMessage(data, context)) {
+        markAllComplete();
+        isStreaming.value = false;
+      }
+    },
+    (err) => {
+      if (err.name !== "AbortError") {
+        const errorStep = createStep(
+          "text",
+          `流式响应出错: ${err?.message ?? String(err)}`,
+        );
+        errorStep.status = "complete";
+        steps.value.push(errorStep);
+      }
+      isStreaming.value = false;
+    },
+    () => {
+      markAllComplete();
+      isStreaming.value = false;
+    },
+    abortController.signal,
+  );
 }
 
 function handlePause() {
   if (abortController) {
-    abortController.abort()
-    isStreaming.value = false
-    markAllComplete()
+    abortController.abort();
+    isStreaming.value = false;
+    markAllComplete();
   }
 }
 
 onMounted(() => {
-  startRequest('帮我点击搜索按钮')
-})
+  const userMessage = route.query.message as string;
+  userMessage && startRequest(userMessage);
+});
 
 onUnmounted(() => {
-  abortController?.abort()
-})
+  abortController?.abort();
+});
 </script>
 
 <template>
@@ -101,10 +90,21 @@ onUnmounted(() => {
         <BorderMotion />
       </div>
 
-      <div class="panel-layer" :class="isExpanded ? 'items-center justify-center' : 'items-end justify-end p-6'">
+      <div
+        class="panel-layer"
+        :class="
+          isExpanded
+            ? 'items-center justify-center'
+            : 'items-end justify-end p-6'
+        "
+      >
         <div
           class="cua-content-container border-border border-[1px] bg-white"
-          :class="isExpanded ? 'w-[840px] h-[640px] rounded-3xl p-6' : 'w-[275px] rounded-2xl p-3 gap-2'"
+          :class="
+            isExpanded
+              ? 'w-[840px] h-[640px] rounded-3xl p-6'
+              : 'w-[275px] rounded-2xl p-3 gap-2'
+          "
         >
           <Header
             :is-streaming="isStreaming"
@@ -156,6 +156,8 @@ onUnmounted(() => {
 }
 
 .cua-content-container {
-  box-shadow: 0 12px 16px -4px rgba(10, 13, 18, 0.08), 0 4px 6px -2px rgba(10, 13, 18, 0.03);
+  box-shadow:
+    0 12px 16px -4px rgba(10, 13, 18, 0.08),
+    0 4px 6px -2px rgba(10, 13, 18, 0.03);
 }
 </style>

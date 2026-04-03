@@ -13,10 +13,14 @@ import { DotIcon, ImageIcon, SearchIcon } from 'lucide-vue-next'
 import type { Step } from './utils'
 import { getHostname, getLogoSrc } from './utils'
 
-const props = defineProps<{
+interface Props {
   steps: Step[]
-  isStreaming: boolean
-}>()
+  isStreaming?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isStreaming: true,
+})
 </script>
 
 <template>
@@ -27,7 +31,7 @@ const props = defineProps<{
       </ChainOfThoughtHeader>
       <ChainOfThoughtContent>
         <!-- Empty / loading state -->
-        <template v-if="steps.length === 0 && isStreaming">
+        <template v-if="props.steps.length === 0 && isStreaming">
           <ChainOfThoughtStep
             label="正在连接…"
             status="active"
