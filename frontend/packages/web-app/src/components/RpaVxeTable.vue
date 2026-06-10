@@ -57,7 +57,7 @@ watch(() => dataSource.length, () => {
       :row-config="{ isHover: true }"
       :menu-config="{
         body: {
-          options: [[{ code: 'copy', name: $t('复制') }]],
+          options: [[{ code: 'copy', name: $t('common.copy') }]],
         },
         visibleMethod: ({ options }) => {
           options.forEach((list) => {
