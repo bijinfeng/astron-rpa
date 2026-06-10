@@ -8,7 +8,6 @@
   ],
   "asar": false,
   "files": [
-    "node_modules/**",
     "out/**",
     "extensions/**",
     "package.json"

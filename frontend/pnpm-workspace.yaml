@@ -4,6 +4,8 @@ packages:
   - components/**
   - '!**/test/**'
 
+nodeLinker: hoisted
+
 allowBuilds:
   '@bundled-es-modules/glob': false
   '@sentry/cli': false
